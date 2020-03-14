@@ -1,0 +1,49 @@
+name: Build and Deploy
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: Setup python
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+
+      - name: Install project and dependencies
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          export
+
+      - name: Build static page
+        shell: bash
+        run: |
+          python app.py &
+          sleep 8
+          wget -r http://127.0.0.1:8050/
+          wget -r http://127.0.0.1:8050/_dash-layout
+          wget -r http://127.0.0.1:8050/_dash-dependencies
+          sed -i 's/_dash-layout/_dash-layout.json/g' 127.0.0.1:8050/_dash-component-suites/dash_renderer/*.js
+          sed -i 's/_dash-dependencies/_dash-dependencies.json/g' 127.0.0.1:8050/_dash-component-suites/dash_renderer/*.js
+          mv 127.0.0.1:8050/_dash-layout 127.0.0.1:8050/_dash-layout.json
+          mv 127.0.0.1:8050/_dash-dependencies 127.0.0.1:8050/_dash-dependencies.json
+          cp assets/* 127.0.0.1:8050/assets/
+          cp _static/async* 127.0.0.1:8050/_dash-component-suites/dash_core_components/
+          ps | grep python | awk '{print $$1}' | xargs kill -9
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          BRANCH: gh-pages # The branch the action should deploy to.
+          FOLDER: 127.0.0.1:8050 # The folder the action should deploy.
