@@ -5,12 +5,10 @@ on:
       - master
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          persist-credentials: false
+        uses: actions/checkout@v1
 
       - name: Setup python
         uses: actions/setup-python@v1
@@ -29,20 +27,17 @@ jobs:
         shell: bash
         run: make html
 
-      - name: Install SSH Client 🔑
-        uses: webfactory/ssh-agent@v0.2.0
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
         with:
-          ssh-private-key: ${{ secrets.DEPLOY_KEY }}
+          hugo-version: '0.64.0'
 
-      # workaround for https://github.com/webfactory/ssh-agent/issues/20
-      - name: Add Github host keys to the SSH configuration inside the container
-        run: |
-          ssh-keyscan -t rsa github.com >> /home/runner/.ssh/known_hosts
+      - name: Build
+        run: hugo --minify
 
       - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@releases/v3-test
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          DEBUG: true
-          SSH: true
-          BRANCH: gh-pages
-          FOLDER: 127.0.0.1:8050
+          deploy_key: ${{ secrets.DEPLOY_KEY }}
+          publish_dir: ./127.0.0.1:8050
+          enable_jekyll: true
