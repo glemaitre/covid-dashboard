@@ -34,10 +34,11 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.DEPLOY_KEY }}
 
-    - name: Add Github host keys to the SSH configuration inside the container
-      run: |
-        mkdir -p /root/.ssh
-        ssh-keyscan -t rsa github.com >> /root/.ssh/known_hosts
+      # workaround for https://github.com/webfactory/ssh-agent/issues/20
+      - name: Add Github host keys to the SSH configuration inside the container
+        run: |
+          mkdir -p /root/.ssh
+          ssh-keyscan -t rsa github.com >> /root/.ssh/known_hosts
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@releases/v3
