@@ -8,7 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
 
       - name: Setup python
         uses: actions/setup-python@v1
@@ -39,7 +41,7 @@ jobs:
       #     ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
 
       - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@releases/v3
+        uses: JamesIves/github-pages-deploy-action@releases/v3-test
         with:
           DEBUG: true
           SSH: true
