@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v1
         with:
           persist-credentials: false
 
@@ -34,11 +34,11 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.DEPLOY_KEY }}
 
-      # workaround for https://github.com/webfactory/ssh-agent/issues/20
-      - name: Add Github host keys to the SSH configuration inside the container
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+      # # workaround for https://github.com/webfactory/ssh-agent/issues/20
+      # - name: Add Github host keys to the SSH configuration inside the container
+      #   run: |
+      #     mkdir -p ~/.ssh
+      #     ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@releases/v3
