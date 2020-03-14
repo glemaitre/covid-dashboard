@@ -9,8 +9,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-        with:
-          persist-credentials: false
 
       - name: Setup python
         uses: actions/setup-python@v1
@@ -44,6 +42,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           DEBUG: true
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          SSH: true
+          # ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           BRANCH: gh-pages
           FOLDER: 127.0.0.1:8050
