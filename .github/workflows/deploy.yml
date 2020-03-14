@@ -44,6 +44,6 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           DEBUG: true
-          SSH: true
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           BRANCH: gh-pages
           FOLDER: 127.0.0.1:8050
