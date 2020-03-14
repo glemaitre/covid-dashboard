@@ -32,12 +32,6 @@ jobs:
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
-<<<<<<< HEAD
           SSH: true
           BRANCH: gh-pages
           FOLDER: 127.0.0.1:8050
-=======
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          BRANCH: gh-pages # The branch the action should deploy to.
-          FOLDER: 127.0.0.1:8050 # The folder the action should deploy.
->>>>>>> glemaitre/master
