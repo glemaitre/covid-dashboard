@@ -32,6 +32,7 @@ jobs:
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@releases/v3-test
         with:
+          DEBUG: true
           SSH: true
           BRANCH: gh-pages
           FOLDER: 127.0.0.1:8050
