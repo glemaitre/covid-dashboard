@@ -34,17 +34,15 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.DEPLOY_KEY }}
 
-      # # workaround for https://github.com/webfactory/ssh-agent/issues/20
-      # - name: Add Github host keys to the SSH configuration inside the container
-      #   run: |
-      #     mkdir -p ~/.ssh
-      #     ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+      # workaround for https://github.com/webfactory/ssh-agent/issues/20
+      - name: Add Github host keys to the SSH configuration inside the container
+        run: |
+          ssh-keyscan -t rsa github.com >> /home/runner/.ssh/known_hosts
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@releases/v3-test
         with:
           DEBUG: true
           SSH: true
-          # ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           BRANCH: gh-pages
           FOLDER: 127.0.0.1:8050
